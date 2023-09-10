@@ -16,4 +16,23 @@ const validateBody = (schema) => {
   return func;
 };
 
-export default validateBody;
+const validateBodyFavorite = (schema) => {
+  const func = (req, res, next) => {
+    // console.log('req: ', typeof req.body[favorite]);
+    // // console.log('length(req.body): ',length(req.body));
+
+    // if (typeof req.body[favorite] === "undefined") {
+    //   return next(HttpError(400, "missing field favorite"));
+    // }
+
+    const { error } = schema.validate(req.body);
+    if (error) {
+      return next(HttpError(400, error.message));
+    }
+    next();
+  };
+
+  return func;
+};
+
+export default { validateBody, validateBodyFavorite };
