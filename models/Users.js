@@ -1,6 +1,6 @@
 import { Schema, model } from "mongoose";
 import { handleSaveError, runValidateAtUpdate } from "./hooks.js";
-import { validatePhoneRegex } from "../schemas/contacts-schemas.js";
+import { emailRegexp } from "../schemas/user-schemas.js";
 
 const userSchema = new Schema(
   {
@@ -10,6 +10,7 @@ const userSchema = new Schema(
     },
     email: {
       type: String,
+      match: emailRegexp,
       required: [true, "Email is required"],
       unique: true,
     },
@@ -23,12 +24,12 @@ const userSchema = new Schema(
   { versionKey: false, timestamps: true }
 );
 
-// userSchema.post("save", handleSaveError);
+userSchema.post("save", handleSaveError);
 
-// userSchema.pre("findOneAndUpdate", runValidateAtUpdate);
+userSchema.pre("findOneAndUpdate", runValidateAtUpdate);
 
-// userSchema.post("findOneAndUpdate", handleSaveError);
+userSchema.post("findOneAndUpdate", handleSaveError);
 
-const User = model("user", userSchema);
+const User = model("users", userSchema);
 
 export default User;

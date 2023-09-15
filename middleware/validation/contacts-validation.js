@@ -1,14 +1,20 @@
-import contactsSchemas from "../../schemas/contacts-schemas.js";
+import { contactsSchemas } from "../../schemas/index.js";
 
-import validate from "../../decorators/index.js";
+import validateBody from "../../decorators/index.js";
 
-const addContactValidate = validate.validateBody(contactsSchemas.contactAddSchema);
-const updateContactValidate = validate.validateBody(contactsSchemas.contactUpdateSchema);
-const updateContactFavoriteValidate = validate.validateBodyFavorite(contactsSchemas.contactUpdateFavoriteSchema);
+const addContactValidate = validateBody.validateBody(
+  contactsSchemas.contactAddSchema
+);
+const updateContactValidate = validateBody.validateBody(
+  contactsSchemas.contactUpdateSchema
+);
+const updateContactFavoriteValidate = validateBody.validateBodyFavorite(
+  contactsSchemas.contactUpdateFavoriteSchema
+);
 
-
-export default {
+const contactsValidation = {
   addContactValidate,
   updateContactValidate,
   updateContactFavoriteValidate,
 };
+export default contactsValidation;

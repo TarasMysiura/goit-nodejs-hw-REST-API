@@ -46,10 +46,12 @@ const deleteById = async (req, res) => {
   });
 };
 
-export default {
+const contactsControllers = {
   getAll: ctrlWrapper(getAll),
   getByID: ctrlWrapper(getByID),
   add: ctrlWrapper(add),
   updateById: ctrlWrapper(updateById),
   deleteById: ctrlWrapper(deleteById),
 };
+
+export default contactsControllers;
