@@ -43,15 +43,20 @@ const signin = async (req, res) => {
   const payload = {
     id,
   };
-
-  const accessToken = jwt.sign(payload, JWT_SECRET, { expiresIn: "1h" });
-  const refreshToken = jwt.sign(payload, JWT_SECRET, { expiresIn: "23h" });
-  await User.findByIdAndUpdate(id, { accessToken, refreshToken });
-
+  const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "10h" });
+  await User.findByIdAndUpdate(id, { token });
   res.json({
-    accessToken,
-    refreshToken,
+    token,
   });
+
+  // const accessToken = jwt.sign(payload, JWT_SECRET, { expiresIn: "1h" });
+  // const refreshToken = jwt.sign(payload, JWT_SECRET, { expiresIn: "23h" });
+  // await User.findByIdAndUpdate(id, { accessToken, refreshToken });
+
+  // res.json({
+  //   accessToken,
+  //   refreshToken,
+  // });
 };
 
 const getCurrent = (req, res) => {
@@ -65,7 +70,7 @@ const getCurrent = (req, res) => {
 
 const signout = async (req, res) => {
   const { _id } = req.user;
-  await User.findByIdAndUpdate(_id, { accessToken: "", refreshToken: "" });
+  await User.findByIdAndUpdate(_id, { token: ""});
 
   res.json({
     message: "Signout success",
@@ -93,7 +98,7 @@ const refresh = async (req, res) => {
   }
 };
 
-const usersControllers = {
+const authControllers = {
   signup: ctrlWrapper(signup),
   signin: ctrlWrapper(signin),
   getCurrent: ctrlWrapper(getCurrent),
@@ -101,4 +106,4 @@ const usersControllers = {
   refresh: ctrlWrapper(refresh),
 };
 
-export default usersControllers;
+export default authControllers;
