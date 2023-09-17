@@ -28,4 +28,5 @@ const validateBodyFavorite = (schema) => {
   return func;
 };
 
-export default { validateBody, validateBodyFavorite };
+
+export default { validateBody, validateBodyFavorite};

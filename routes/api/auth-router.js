@@ -16,13 +16,12 @@ authRouter.post(
 );
 
 authRouter.post(
-  "/signin",
+  "/login",
   usersValidation.userSigninValidate,
   authControllers.signin
 );
+authRouter.post("/logout", authenticate, authControllers.signout);
 
 authRouter.get("/current", authenticate, authControllers.getCurrent);
-
-authRouter.post("/signout", authenticate, authControllers.signout);
 
 export default authRouter;
