@@ -1,8 +1,19 @@
+import fs from "fs/promises";
+import path from "path";
+import Jimp from "jimp";
+import gravatar from "gravatar";
+
 import { Contact } from "../models/index.js";
 
 import { HttpError } from "../helpers/index.js";
 
 import { ctrlWrapper } from "../decorators/index.js";
+
+const avatarsPath = path.resolve("public", "avatars");
+const newPath = (filename) => {
+  return path.join(avatarsPath, filename);
+};
+// let avatarName = ''
 
 const getAll = async (req, res) => {
   const { _id: owner } = req.user;
@@ -36,14 +47,56 @@ const getByID = async (req, res) => {
 };
 
 const add = async (req, res) => {
-  const { _id: owner } = req.user;
-  const result = await Contact.create({ ...req.body, owner });
+  const { _id: owner, email } = req.user;
+  const { path: oldPath, filename } = req.file;
+  console.log("req.file: ", req.file);
+
+  const file = await Jimp.read(oldPath);
+  file.resize(250, 250).write(oldPath);
+  const avatarImagePath = newPath(filename);
+  const fileNameImage = filename;
+
+  await fs.rename(oldPath, newPath(filename));
+  const avatarURL = gravatar.url(email, {}, true);
+
+  const result = await Contact.create({
+    ...req.body,
+    avatarURL,
+    fileNameImage,
+    avatarImagePath,
+    owner,
+  });
   res.status(201).json(result);
 };
 
 const updateById = async (req, res) => {
   const { _id: owner } = req.user;
   const { id } = req.params;
+
+  const result = await Contact.findOneAndUpdate({ _id: id, owner }, req.body, {
+    new: true,
+  });
+
+  if (!result) {
+    throw HttpError(404, `Contacts with id=${id} not found`);
+  }
+
+  res.json(result);
+};
+const updateByIdAvatar = async (req, res) => {
+  const { _id: owner } = req.user;
+  const { id } = req.params;
+
+  const { path: oldPath } = req.file;
+  const user = await Contact.findById(id);
+  // const oldPath = user.avatarImagePath
+  // console.log("user: ", user);
+  const file = await Jimp.read(oldPath);
+  file.resize(250, 250).write(oldPath);
+  // console.log("newPath: ", newPath(filename));
+  await fs.rename(oldPath, user.avatarImagePath);
+  console.log("user.avatarImagePath: ", user.avatarImagePath);
+  // const avatarURL = gravatar.url(email, {}, true);
   const result = await Contact.findOneAndUpdate({ _id: id, owner }, req.body, {
     new: true,
   });
@@ -72,6 +125,7 @@ const contactsControllers = {
   getByID: ctrlWrapper(getByID),
   add: ctrlWrapper(add),
   updateById: ctrlWrapper(updateById),
+  updateByIdAvatar: ctrlWrapper(updateByIdAvatar),
   deleteById: ctrlWrapper(deleteById),
 };
 
