@@ -62,7 +62,7 @@ const add = async (req, res) => {
   const result = await Contact.create({
     ...req.body,
     avatarURL,
-    fileNameImage,
+    // fileNameImage,
     avatarImagePath,
     owner,
   });
@@ -86,16 +86,27 @@ const updateById = async (req, res) => {
 
 const updateByIdAvatar = async (req, res) => {
   const { _id } = req.user;
+  const { id } = req.params;
+  const user = await Contact.findOne({ _id: id });
+  // console.log("user: ", user);
+  const { path: oldPath } = req.file;
+
+  const file = await Jimp.read(oldPath);
+  file.resize(250, 250).write(oldPath);
+
   const { path: tempUpload, originalname } = req.file;
   const filename = `${_id}_${originalname}`;
   const resultUpload = path.join(avatarsPath, filename);
-
+  const avatarImagePath = resultUpload;
+  // console.log("avatarImagePath: ", avatarImagePath);
 
   await fs.rename(tempUpload, resultUpload);
-  const avatarURL = path.join("avatars", filename);
-  await Contact.findByIdAndUpdate(_id, { avatarURL });
+  await fs.unlink(user.avatarImagePath);
+  const avatarURL = gravatar.url(user.email, {}, true);
 
-  res.json({ avatarURL });
+  await Contact.findOneAndUpdate({ _id: id }, { avatarURL, avatarImagePath });
+
+  res.json({ avatarURL, avatarImagePath });
 };
 
 const deleteById = async (req, res) => {
