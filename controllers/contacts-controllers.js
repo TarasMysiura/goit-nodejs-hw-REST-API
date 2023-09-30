@@ -13,7 +13,6 @@ const avatarsPath = path.resolve("public", "avatars");
 const newPath = (filename) => {
   return path.join(avatarsPath, filename);
 };
-// let avatarName = ''
 
 const getAll = async (req, res) => {
   const { _id: owner } = req.user;
@@ -62,7 +61,6 @@ const add = async (req, res) => {
   const result = await Contact.create({
     ...req.body,
     avatarURL,
-    // fileNameImage,
     avatarImagePath,
     owner,
   });
@@ -88,7 +86,6 @@ const updateByIdAvatar = async (req, res) => {
   const { _id } = req.user;
   const { id } = req.params;
   const user = await Contact.findOne({ _id: id });
-  // console.log("user: ", user);
   const { path: oldPath } = req.file;
 
   const file = await Jimp.read(oldPath);
@@ -98,7 +95,6 @@ const updateByIdAvatar = async (req, res) => {
   const filename = `${_id}_${originalname}`;
   const resultUpload = path.join(avatarsPath, filename);
   const avatarImagePath = resultUpload;
-  // console.log("avatarImagePath: ", avatarImagePath);
 
   await fs.rename(tempUpload, resultUpload);
   await fs.unlink(user.avatarImagePath);
