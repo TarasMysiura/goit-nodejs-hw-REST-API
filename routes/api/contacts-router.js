@@ -40,7 +40,7 @@ contactsRouter.patch(
 contactsRouter.patch(
   "/:id/avatars",
   isValidId,
-  uploadService.uploadChangeAvatar.single("avatar"),
+  uploadService.upload.single("avatar"),
   contactsValidation.updateContactAvatarValidate,
   contactsControllers.updateByIdAvatar
 );

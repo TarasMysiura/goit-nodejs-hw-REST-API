@@ -21,24 +21,9 @@ const upload = multer({
   limits,
 });
 
-const storageChangeAvatar = multer.diskStorage({
-  destination,
-  filename: (req, file, cb) => {
-    const user = Contact.findById(id);
 
-    //   const uniquePreffix = `${Date.now()}_${Math.round(Math.random() * 1e9)}`;
-    const filename = user.filename;
-    cb(null, filename);
-  },
-});
-
-const uploadChangeAvatar = multer({
-  storageChangeAvatar,
-  limits,
-});
 const uploadService = {
   upload,
-  uploadChangeAvatar,
 };
 
 export default uploadService;

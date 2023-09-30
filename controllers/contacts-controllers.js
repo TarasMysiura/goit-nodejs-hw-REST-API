@@ -83,29 +83,19 @@ const updateById = async (req, res) => {
 
   res.json(result);
 };
+
 const updateByIdAvatar = async (req, res) => {
-  const { _id: owner } = req.user;
-  const { id } = req.params;
+  const { _id } = req.user;
+  const { path: tempUpload, originalname } = req.file;
+  const filename = `${_id}_${originalname}`;
+  const resultUpload = path.join(avatarsPath, filename);
 
-  const { path: oldPath } = req.file;
-  const user = await Contact.findById(id);
-  // const oldPath = user.avatarImagePath
-  // console.log("user: ", user);
-  const file = await Jimp.read(oldPath);
-  file.resize(250, 250).write(oldPath);
-  // console.log("newPath: ", newPath(filename));
-  await fs.rename(oldPath, user.avatarImagePath);
-  console.log("user.avatarImagePath: ", user.avatarImagePath);
-  // const avatarURL = gravatar.url(email, {}, true);
-  const result = await Contact.findOneAndUpdate({ _id: id, owner }, req.body, {
-    new: true,
-  });
 
-  if (!result) {
-    throw HttpError(404, `Contacts with id=${id} not found`);
-  }
+  await fs.rename(tempUpload, resultUpload);
+  const avatarURL = path.join("avatars", filename);
+  await Contact.findByIdAndUpdate(_id, { avatarURL });
 
-  res.json(result);
+  res.json({ avatarURL });
 };
 
 const deleteById = async (req, res) => {
