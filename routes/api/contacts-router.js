@@ -1,14 +1,16 @@
 import express from "express";
 
-import {contactsControllers} from "../../controllers/index.js";
+import { contactsControllers } from "../../controllers/index.js";
 
-import { authenticate, contactsValidation, isValidId } from "../../middleware/validation/index.js";
-
-// import  from "../../middleware/validation/index.js";
+import {
+  authenticate,
+  contactsValidation,
+  isValidId,
+} from "../../middleware/validation/index.js";
+import { uploadService } from "../../middleware/index.js";
 
 const contactsRouter = express.Router();
 contactsRouter.use(authenticate);
-
 
 contactsRouter.get("/", contactsControllers.getAll);
 
@@ -16,6 +18,7 @@ contactsRouter.get("/:id", isValidId, contactsControllers.getByID);
 
 contactsRouter.post(
   "/",
+  uploadService.upload.single("avatar"),
   contactsValidation.addContactValidate,
   contactsControllers.add
 );
@@ -32,6 +35,14 @@ contactsRouter.patch(
   isValidId,
   contactsValidation.updateContactFavoriteValidate,
   contactsControllers.updateById
+);
+
+contactsRouter.patch(
+  "/:id/avatars",
+  isValidId,
+  uploadService.upload.single("avatar"),
+  contactsValidation.updateContactAvatarValidate,
+  contactsControllers.updateByIdAvatar
 );
 
 contactsRouter.delete("/:id", isValidId, contactsControllers.deleteById);

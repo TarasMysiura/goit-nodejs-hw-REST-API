@@ -22,6 +22,15 @@ const contactSchema = new Schema(
       type: Boolean,
       default: false,
     },
+    avatarURL: {
+      type: String
+    },
+    avatarImagePath: {
+      type: String
+    },
+    fileNameImage: {
+      type: String
+    },
     owner: {
       type: Schema.Types.ObjectId,
       ref: "users",

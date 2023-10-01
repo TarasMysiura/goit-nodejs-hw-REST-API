@@ -28,5 +28,17 @@ const validateBodyFavorite = (schema) => {
   return func;
 };
 
+const validateBodyAvatar = (schema) => {
+  const func = (req, res, next) => {
+    const { error } = schema.validate(req.body);
+    if (error) {
+      return next(HttpError(400, error.message));
+    }
+    next();
+  };
 
-export default { validateBody, validateBodyFavorite};
+  return func;
+};
+
+
+export default { validateBody, validateBodyFavorite, validateBodyAvatar};

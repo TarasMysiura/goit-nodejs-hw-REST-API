@@ -12,9 +12,14 @@ const updateContactFavoriteValidate = validateBody.validateBodyFavorite(
   contactsSchemas.contactUpdateFavoriteSchema
 );
 
+const updateContactAvatarValidate = validateBody.validateBodyAvatar(
+  contactsSchemas.contactUpdateAvatarSchema
+);
+
 const contactsValidation = {
   addContactValidate,
   updateContactValidate,
   updateContactFavoriteValidate,
+  updateContactAvatarValidate,
 };
 export default contactsValidation;
