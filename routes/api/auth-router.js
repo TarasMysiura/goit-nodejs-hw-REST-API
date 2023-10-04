@@ -15,6 +15,17 @@ authRouter.post(
   authControllers.signup
 );
 
+authRouter.get(
+  "/verify/:verificationToken",
+  authControllers.verify
+);
+
+authRouter.post(
+  "/verify",
+  usersValidation.userEmailValidate,
+  authControllers.resendVerifyEmail,
+);
+
 authRouter.post(
   "/login",
   usersValidation.userSigninValidate,
