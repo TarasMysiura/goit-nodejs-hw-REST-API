@@ -8,9 +8,13 @@ const userSignupValidate = validateBody.validateBody(
 const userSigninValidate = validateBody.validateBody(
   usersSchemas.userSigninSchema
 );
+const userEmailValidate = validateBody.validateBody(
+  usersSchemas.userEmailSchema
+);
 
 const usersValidation = {
   userSignupValidate,
   userSigninValidate,
+  userEmailValidate,
 };
 export default usersValidation;

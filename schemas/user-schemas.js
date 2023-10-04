@@ -11,6 +11,10 @@ export const userSigninSchema = Joi.object({
   password: Joi.string().min(6).required(),
 });
 
+export const userEmailSchema = Joi.object({
+  email: Joi.string().pattern(emailRegexp).required(),
+});
+
 export const userRefreshTokenSchema = Joi.object({
   refreshToken: Joi.string().required(),
 });
@@ -18,6 +22,7 @@ export const userRefreshTokenSchema = Joi.object({
 const usersSchemas = {
   userSignupSchema,
   userSigninSchema,
+  userEmailSchema,
   userRefreshTokenSchema,
 };
 
